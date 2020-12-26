@@ -46,6 +46,22 @@ class Post_endpoint(Resource):
 
         return jsonify(lista_posts)
 
+    def post(self):
+        conn = db_connect.connect()
+        titulo = request.json['titulo']
+        fecha = request.json['fecha']
+        descripcion = request.json['descripcion']
+        autor = request.json['autor']
+        autor_dni = request.json['dni']
+        fecha_nac = request.json['fecha_nac']
+
+        query = conn.execute("select count(*) from autores where dni = {}".format(autor_dni))
+        resultado = query.cursor.fetchone()[0]
+        if resultado ==  0:
+            conn.execute("insert into autores values('{0}','{1}','{2}')".format(autor_dni, autor, fecha_nac))
+
+        query = conn.execute("insert into posts values('{0}','{1}','{2}','{3}')".format(titulo, fecha, descripcion, autor_dni))
+        return {'status': 'Nuevo post añadido'}
 
 class Employees(Resource):
     def get(self):
@@ -75,7 +91,7 @@ class Employees(Resource):
                                              reports_to, birth_date, hire_date, address,
                                              city, state, country, postal_code, phone, fax,
                                              email))
-        return {'status': 'Nuevo empleado añadido'}
+        return {'status': 'Nuevo empleado insertado'}
 
 
 class Tracks(Resource):

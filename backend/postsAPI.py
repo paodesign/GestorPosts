@@ -1,11 +1,12 @@
 # coding=utf-8
 from flask_cors import CORS
-from flask import Flask, request, jsonify, Response, render_template
+from flask import Flask, request, jsonify, Response, render_template, abort
 from flask_restful import Resource, Api
 from sqlalchemy import create_engine
 import pyodbc
 import json
 from json import JSONEncoder
+
 
 
 db_connect = create_engine('mssql+pyodbc://(localdb)\MSSQLLocalDB/Viajes?driver=SQL+Server+Native+Client+11.0?Trusted_Connection=yes', echo=True)
@@ -62,6 +63,20 @@ class Post_endpoint(Resource):
 
         query = conn.execute("insert into posts values('{0}','{1}','{2}','{3}')".format(titulo, fecha, descripcion, autor_dni))
         return {'status': 'Nuevo post añadido'}
+
+    def delete(self):
+        conn = db_connect.connect()
+        codigo = request.args.get("codigo")
+        query = conn.execute("select count(*) from posts where id = {}".format(codigo))
+        resultado = query.cursor.fetchone()[0]
+        if resultado ==  0:
+            abort(400)
+
+        query = conn.execute("delete from posts where id ={}".format(codigo))
+       
+        return {'status': 'Se a eliminado el Post'}
+
+
 
 class Employees(Resource):
     def get(self):

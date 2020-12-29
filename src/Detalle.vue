@@ -23,13 +23,24 @@
         <textarea class="form-control" v-model="nota.descripcion"></textarea>
       </div>
     </div>
-    <button type="button" class="btn btn-primary" @click="guardar">Guardar</button>
-     <button type="button" class="btn btn-secondary" @click="volver">Volver</button>
+    <p>
+      <button type="button" class="btn btn-primary" @click="guardar">
+        Guardar
+      </button>
+    </p>
+    <p>
+      <button type="button" class="btn btn-secondary" @click="volver">
+        Volver
+      </button>
+    </p>
+    <div class="alert alert-success" role="alert" v-if="!guardar">
+      <p>Se guardo el post con éxito!</p>
+    </div>
   </form>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   name: "detalle",
@@ -41,22 +52,25 @@ export default {
         autor: "",
         dni: "",
         fecha: "",
-        fecha_nac: new Date()
+        fecha_nac: new Date(),
       },
     };
   },
   methods: {
-    volver(){
-       this.$router.push('/post')
+    volver() {
+      this.$router.push("/post");
     },
-    guardar(){
-      this.nota.fecha = new Date()
-    axios.post("http://192.168.1.10:5000/api/posts", this.nota)
-      .then(resp =>{
-        console.log()
-      })
-    }
-  }
+    guardar() {
+      this.nota.fecha = new Date();
+      axios
+        .post("http://192.168.1.10:5000/api/posts", this.nota)
+        .then((resp) => {
+          console.log(resp.data);
+          this.volver();
+        });
+    },
+    
+  },
 };
 </script>
 

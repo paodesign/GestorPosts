@@ -3,28 +3,28 @@
     <div class="form">
       <div class="form-group">
         <label>Titulo: </label>
-        <input class="form-control" type="text" v-model="nota.titulo" />
+        <input class="form-control" type="text" v-model="nota.titulo" :readonly="estadoForm == 'ver'" />
       </div>
       <fieldset>
         <legend>Autor:</legend>
         <div class="form-group">
           <label>Nombre: </label>
-          <input class="form-control" v-model="nota.autor" />
+          <input class="form-control" v-model="nota.autor" :readonly="estadoForm == 'ver'" />
         </div>
 
         <div class="form-group">
           <label>Documento: </label>
-          <input class="form-control" v-model="nota.dni" />
+          <input type="number" class="form-control" v-model="nota.dni" :readonly="estadoForm == 'ver'" />
         </div>
       </fieldset>
 
       <div class="form-group">
         <label>Texto: </label>
-        <textarea class="form-control" v-model="nota.descripcion"></textarea>
+        <textarea class="form-control" v-model="nota.descripcion" :readonly="estadoForm == 'ver'"></textarea>
       </div>
     </div>
     <p>
-      <button type="button" class="btn btn-primary" @click="guardar">
+      <button type="button" class="btn btn-primary" @click="guardar" :disabled="!esValido()" v-show="estadoForm != 'ver'">
         Guardar
       </button>
     </p>
@@ -33,9 +33,7 @@
         Volver
       </button>
     </p>
-    <div class="alert alert-success" role="alert" v-if="!guardar">
-      <p>Se guardo el post con éxito!</p>
-    </div>
+    
   </form>
 </template>
 
@@ -46,6 +44,7 @@ export default {
   name: "detalle",
   data() {
     return {
+      estadoForm: "",
       nota: {
         titulo: "",
         descripcion: "",
@@ -69,8 +68,22 @@ export default {
           this.volver();
         });
     },
-    
+    esValido(){
+      return this.nota.titulo.length > 3 
+        && this.nota.autor.length > 3 
+        && this.nota.dni.length == 8 
+        && this.nota.descripcion.length > 3;
+    },
+    cargaInicial(){
+      this.nota = this.$route.params.nota
+    }    
   },
+  mounted(){
+    this.estadoForm =this.$route.params.state
+    if(this.estadoForm == "ver" || this.estadoForm == "editar"){
+      this.cargaInicial()      
+    }      
+  }
 };
 </script>
 

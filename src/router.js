@@ -18,7 +18,7 @@ const routes=[
         component: Posts
     },
     {
-        path:'/detalle',
+        path:'/detalle/:state/:id',
         name:'detalle',
         component: Detalle
     }

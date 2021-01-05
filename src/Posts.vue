@@ -1,7 +1,11 @@
 <template>
   <div id="app" class="widget">
     <div>
-      <router-link :to="{name: 'detalle', params:{id: 0, state: 'nuevo'}}" class="btn btn-primary">Agregar</router-link>
+      <router-link
+        :to="{ name: 'detalle', params: { id: 0, state: 'nuevo' } }"
+        class="btn btn-primary"
+        >Agregar</router-link
+      >
       <br />
       <br />
     </div>
@@ -13,15 +17,23 @@
         class="card col-5 offset-1"
       >
         <div class="card-body">
-          <h4 class="card-title alert-info col-12">
-            {{ post.titulo.toUpperCase() }}
-          </h4>
-          <router-link :to="{name: 'detalle', params:{id: post.codigo, state: 'ver', nota: post}}">Ver mas...</router-link>
+          <router-link
+            :to="{
+              name: 'detalle',
+              params: { id: post.codigo, state: 'ver', nota: post },
+            }"
+          >
+            <h4 class="card-title col-12">
+              {{ post.titulo.toUpperCase() }}
+            </h4>
+          </router-link>
 
-          <p class="card-subtitle text-truncate text-muted">            
+          <p class="card-subtitle text-truncate text-muted">
             <span>{{ post.descripcion }}</span>
           </p>
-          <p class="card-text ">{{ post.autor }} - {{ new Date(post.fecha).toLocaleDateString() }}</p>
+          <p class="card-text">
+            {{ post.autor }} - {{ new Date(post.fecha).toLocaleDateString() }}
+          </p>
         </div>
         <p>
           <button
@@ -31,7 +43,14 @@
           >
             Eliminar
           </button>
-            <router-link :to="{name: 'detalle', params:{id: post.codigo, state: 'editar', nota: post}}" class="btn btn-primary">Editar</router-link>
+          <router-link
+            :to="{
+              name: 'detalle',
+              params: { id: post.codigo, state: 'editar', nota: post },
+            }"
+            class="btn btn-primary"
+            >Editar</router-link
+          >
         </p>
       </div>
     </div>
@@ -50,7 +69,6 @@ export default {
   },
   methods: {
     getMensaje() {
-
       // this.listaPosts = [
       //   {
       //     autor: "Adam",
@@ -80,7 +98,6 @@ export default {
       //     titulo: "sapo de otro poso",
       //   },
       // ];
-
 
       const path = "http://192.168.1.10:5000/api/posts";
       axios

@@ -1,40 +1,66 @@
 <template>
-  <form>
-    <div class="form">
-      <div class="form-group">
-        <label>Titulo: </label>
-        <input class="form-control" type="text" v-model="nota.titulo" :readonly="estadoForm == 'ver'" />
-      </div>
-      <fieldset>
-        <legend>Autor:</legend>
+  <div class="container">
+    <form>
+      <div class="form">
         <div class="form-group">
-          <label>Nombre: </label>
-          <input class="form-control" v-model="nota.autor" :readonly="estadoForm == 'ver'" />
+          <label>Titulo: </label>
+          <input
+            class="form-control"
+            type="text"
+            v-model="nota.titulo"
+            :readonly="estadoForm == 'ver'"
+          />
         </div>
+        <fieldset>
+          <legend>Autor:</legend>
+          <div class="form-group">
+            <label>Nombre: </label>
+            <input
+              class="form-control"
+              v-model="nota.autor"
+              :readonly="estadoForm == 'ver'"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Documento: </label>
+            <input
+              type="number"
+              class="form-control"
+              v-model="nota.dni"
+              :readonly="estadoForm == 'ver'"
+            />
+          </div>
+        </fieldset>
 
         <div class="form-group">
-          <label>Documento: </label>
-          <input type="number" class="form-control" v-model="nota.dni" :readonly="estadoForm == 'ver'" />
+          <label>Texto: </label>
+          <textarea
+            class="form-control"
+            v-model="nota.descripcion"
+            :readonly="estadoForm == 'ver'"
+            rows="5"
+          ></textarea>
         </div>
-      </fieldset>
-
-      <div class="form-group">
-        <label>Texto: </label>
-        <textarea class="form-control" v-model="nota.descripcion" :readonly="estadoForm == 'ver'"></textarea>
       </div>
-    </div>
-    <p>
-      <button type="button" class="btn btn-primary" @click="guardar" :disabled="!esValido()" v-show="estadoForm != 'ver'">
-        Guardar
-      </button>
-    </p>
-    <p>
-      <button type="button" class="btn btn-secondary" @click="volver">
-        Volver
-      </button>
-    </p>
-    
-  </form>
+      <p>
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="guardar"
+          :disabled="!esValido()"
+          v-show="estadoForm != 'ver'"
+        >
+          Guardar
+        </button>
+      </p>
+      <p>
+        <button type="button" class="btn btn-secondary" @click="volver">
+          Volver
+        </button>
+      </p>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -68,22 +94,24 @@ export default {
           this.volver();
         });
     },
-    esValido(){
-      return this.nota.titulo.length > 3 
-        && this.nota.autor.length > 3 
-        && this.nota.dni.length == 8 
-        && this.nota.descripcion.length > 3;
+    esValido() {
+      return (
+        this.nota.titulo.length > 3 &&
+        this.nota.autor.length > 3 &&
+        this.nota.dni.length == 8 &&
+        this.nota.descripcion.length > 3
+      );
     },
-    cargaInicial(){
-      this.nota = this.$route.params.nota
-    }    
+    cargaInicial() {
+      this.nota = this.$route.params.nota;
+    },
   },
-  mounted(){
-    this.estadoForm =this.$route.params.state
-    if(this.estadoForm == "ver" || this.estadoForm == "editar"){
-      this.cargaInicial()      
-    }      
-  }
+  mounted() {
+    this.estadoForm = this.$route.params.state;
+    if (this.estadoForm == "ver" || this.estadoForm == "editar") {
+      this.cargaInicial();
+    }
+  },
 };
 </script>
 

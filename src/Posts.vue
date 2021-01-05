@@ -1,22 +1,23 @@
 <template>
   <div id="app" class="widget">
-    <div>
+    <div >
       <router-link
         :to="{ name: 'detalle', params: { id: 0, state: 'nuevo' } }"
         class="btn btn-primary"
+         style="width: 18rem;"
         >Agregar</router-link
       >
       <br />
       <br />
     </div>
 
-    <div class="row justify-content-start row">
+    <div class="row justify-content-start row ">
       <div
         v-for="post in listaPosts"
         v-bind:key="post.codigo"
-        class="card col-5 offset-1"
+        class="card col-5 offset-1 card border-primary mb-3"
       >
-        <div class="card-body">
+        <div class="card-body ">
           <router-link
             :to="{
               name: 'detalle',
@@ -32,7 +33,11 @@
             <span>{{ post.descripcion }}</span>
           </p>
           <p class="card-text">
+            <br>
+            <p class="blockquote-footer">
+             
             {{ post.autor }} - {{ new Date(post.fecha).toLocaleDateString() }}
+            </p>
           </p>
         </div>
         <p>

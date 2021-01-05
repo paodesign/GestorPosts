@@ -1,61 +1,70 @@
 <template>
   <div class="container">
     <form>
-      <div class="form">
-        <div class="form-group">
-          <label>Titulo: </label>
+      <div class="form card">
+        <div class="form-group card-header">
+          <label class="bold">Titulo: </label>
           <input
-            class="form-control"
+            class="form-control card-title"
             type="text"
             v-model="nota.titulo"
             :readonly="estadoForm == 'ver'"
           />
         </div>
-        <fieldset>
-          <legend>Autor:</legend>
-          <div class="form-group">
-            <label>Nombre: </label>
-            <input
-              class="form-control"
-              v-model="nota.autor"
-              :readonly="estadoForm == 'ver'"
-            />
-          </div>
+        <div class="form-group form-control">
+          <fieldset>
+            <legend class="scheduler-border">Autor:</legend>
+            <div class=" ">
+              <label class="bold">Nombre: </label>
+              <input
+                class="form-control"
+                v-model="nota.autor"
+                :readonly="estadoForm == 'ver'"
+              />
+            </div>
 
-          <div class="form-group">
-            <label>Documento: </label>
-            <input
-              type="number"
-              class="form-control"
-              v-model="nota.dni"
-              :readonly="estadoForm == 'ver'"
-            />
-          </div>
-        </fieldset>
+            <div class="form-group has-warning">
+              <label class="bold">Documento: </label>
+              <input
+                type="number"
+                class="form-control control-label"
+                v-model="nota.dni"
+                :readonly="estadoForm == 'ver'"
+              />
+            </div>
+          </fieldset>
+        </div>
 
-        <div class="form-group">
-          <label>Texto: </label>
+        <div class="form-group card-text">
+          <label class="bold">Texto: </label>
           <textarea
             class="form-control"
             v-model="nota.descripcion"
             :readonly="estadoForm == 'ver'"
             rows="5"
           ></textarea>
+          <br />
         </div>
       </div>
       <p>
         <button
           type="button"
           class="btn btn-primary"
+          style="width: 18rem"
           @click="guardar"
           :disabled="!esValido()"
           v-show="estadoForm != 'ver'"
         >
-          Guardar
+        Guardar 
         </button>
       </p>
       <p>
-        <button type="button" class="btn btn-secondary" @click="volver">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          style="width: 18rem"
+          @click="volver"
+        >
           Volver
         </button>
       </p>
@@ -116,4 +125,13 @@ export default {
 </script>
 
 <style>
+legend.scheduler-border {
+  font-size: 1em !important;
+  font-weight: bold !important;
+  text-align: left !important;
+  background-color: rgba(230, 230, 230, 0.493);
+}
+label.bold {
+  font-weight: bold;
+}
 </style>

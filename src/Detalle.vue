@@ -55,7 +55,7 @@
           :disabled="!esValido()"
           v-show="estadoForm != 'ver'"
         >
-        Guardar 
+          Guardar
         </button>
       </p>
       <p>
@@ -81,6 +81,7 @@ export default {
     return {
       estadoForm: "",
       nota: {
+        codigo: "",
         titulo: "",
         descripcion: "",
         autor: "",
@@ -95,13 +96,22 @@ export default {
       this.$router.push("/post");
     },
     guardar() {
-      this.nota.fecha = new Date();
-      axios
-        .post("http://192.168.1.10:5000/api/posts", this.nota)
+      let promise;
+
+      if (this.estadoForm == "editar") {
+        promise = axios.put(`http://192.168.1.10:5000/api/posts?codigo=${this.nota.codigo}`, this.nota);
+      }
+      if (this.estadoForm == "nuevo") {
+        this.nota.fecha = new Date();
+        promise = axios.post("http://192.168.1.10:5000/api/posts", this.nota);
+      }
+
+      promise
         .then((resp) => {
           console.log(resp.data);
           this.volver();
-        });
+        })  
+        .catch(console.error);
     },
     esValido() {
       return (

@@ -32,13 +32,12 @@
           <p class="card-subtitle text-truncate text-muted">
             <span>{{ post.descripcion }}</span>
           </p>
-          <p class="card-text">
+          <div class="card-text">
             <br>
-            <p class="blockquote-footer">
-             
-            {{ post.autor }} - {{ new Date(post.fecha).toLocaleDateString() }}
+            <p class="blockquote-footer">             
+              {{ post.autor }} - {{ new Date(post.fecha).toLocaleDateString() }}
             </p>
-          </p>
+          </div>
         </div>
         <p>
           <button

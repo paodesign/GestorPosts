@@ -76,6 +76,17 @@ class Post_endpoint(Resource):
        
         return {'status': 'Se a eliminado el Post'}
 
+    def put(self):
+        conn = db_connect.connect()
+        codigo = request.args.get("codigo")
+        titulo = request.json['titulo']
+        descripcion = request.json['descripcion']
+
+        query = conn.execute("update posts set titulo = '{0}', descripcion = '{1}' where id = '{2}'".format(titulo, descripcion, codigo))
+        return {'status': 'Se a modificado el Post'}
+
+
+
 
 
 class Employees(Resource):

@@ -1,7 +1,5 @@
 <template>
   <div id="app" class="widget">
-  
-
     <h1>{{ titulo }}</h1>
     <router-view />
   </div>

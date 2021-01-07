@@ -36,14 +36,14 @@ class Post():
 
 
 class Post_endpoint(Resource):
-    def get(self):
-        conn = db_connect.connect()
-        query = conn.execute("select * from posts join autores on posts.autor_dni = autores.dni")
-        lista_posts = []
+    def get(self):#
+        conn = db_connect.connect() #se realiza la conección a base de datos
+        query = conn.execute("select * from posts join autores on posts.autor_dni = autores.dni") #se realiza la consulta a base de datos, se pide que traiga todos de la tablas post y autores donde sean iguales post.autor_dni y aurores.dni
+        lista_posts = []#lo que traiga lo guarda en este array
 
-        for fila in query:
-            post = Post(fila['id'],fila['titulo'], fila['fecha'], fila['descripcion'], fila['nombre'], fila['autor_dni'])
-            lista_posts.append(post.__dict__)
+        for fila in query: #hacemos un for ára recorrer la pregunta
+            post = Post(fila['id'],fila['titulo'], fila['fecha'], fila['descripcion'], fila['nombre'], fila['autor_dni'])#post se guarda como va a estar la estructura del post
+            lista_posts.append(post.__dict__)# lo agregamos al array al post como objeto
 
         return jsonify(lista_posts)
 

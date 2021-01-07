@@ -92,43 +92,44 @@ export default {
     };
   },
   methods: {
-    volver() {
-      this.$router.push("/post");
+    volver() { //con el método volver redireciona a la página anterior
+      this.$router.push("/post"); //Vue crea la variable $router para que puedas navegar desde los componentes.
     },
-    guardar() {
-      let promise;
+    guardar() {//tiene dos comportamientos, según el estado del formulario sea "nuevo" o "editar"
+    //va a guardar una nota editada o una nueva nota
+      let promise; //se crea una variable promise, para guardar la referencia a la promesa y simplificar código
 
-      if (this.estadoForm == "editar") {
-        promise = axios.put(`http://192.168.1.10:5000/api/posts?codigo=${this.nota.codigo}`, this.nota);
-      }
-      if (this.estadoForm == "nuevo") {
-        this.nota.fecha = new Date();
+      if (this.estadoForm == "editar") {//si el estdo del formulario es "editar": se suscribe a la promesa 
+        promise = axios.put(`http://192.168.1.10:5000/api/posts?codigo=${this.nota.codigo}`, this.nota);//
+      }//a través del cliente se solicita al backend que modifique(en esa dirección, la nota)y la guardamos en promise
+      if (this.estadoForm == "nuevo") {//si el estado del formulario es "nuevo": se suscribe a la promesa
+        this.nota.fecha = new Date();// le asignamos la fecha a la nota
         promise = axios.post("http://192.168.1.10:5000/api/posts", this.nota);
-      }
+      }// a taves del cliente solicitamos al backend que cree una nueva nota(en esa dirección,nota) y la guardamos en promise
 
-      promise
-        .then((resp) => {
-          console.log(resp.data);
-          this.volver();
+      promise //contiene la refrencia a la promesa
+        .then((resp) => { //si la respuesta fue bien
+          console.log(resp.data);// escribe por consola la parte de la data de la respuesta
+          this.volver();// con el método volver redireciona a la página anterior
         })  
-        .catch(console.error);
+        .catch(console.error);// si la repuesta fue mal, escribe por consola el error.
     },
-    esValido() {
+    esValido() {// esté método realiza las validaciones del formulario
       return (
-        this.nota.titulo.length > 3 &&
-        this.nota.autor.length > 3 &&
-        this.nota.dni.length == 8 &&
-        this.nota.descripcion.length > 3
+        this.nota.titulo.length > 3 && // valida que la longitud de los caracteres del titulo tenga más de 3 caracteres
+        this.nota.autor.length > 3 && // valida que la longitud de los caracteres del autor tenga más de 3 caracteres
+        this.nota.dni.length == 8 && // valida que la longitud de los caracteres del dni tenga 8 caracteres
+        this.nota.descripcion.length > 3 // valida que la longitud de los caracteres de la descripción tenga más de 3 caracteres
       );
     },
-    cargaInicial() {
+    cargaInicial() { //esté método carga la nota al inicio con los parametros que recibe
       this.nota = this.$route.params.nota;
     },
   },
-  mounted() {
-    this.estadoForm = this.$route.params.state;
-    if (this.estadoForm == "ver" || this.estadoForm == "editar") {
-      this.cargaInicial();
+  mounted() {// el método mounted propio de vue  se llama despúes que se haya montado el DOM para poder acceder a los componentes reactivos,las pantallas y los elementos del DOM, y manipularlos.
+    this.estadoForm = this.$route.params.state; // se guarda en el estado del formulario "estadoForm" los parametros que recibe de state
+    if (this.estadoForm == "ver" || this.estadoForm == "editar") {//si el estado del formulario es "ver" o "editar"
+      this.cargaInicial();// se procede a realizar la carga inicial, cargar la nota al inicio con los parametros que recibió
     }
   },
 };

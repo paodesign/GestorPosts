@@ -26,7 +26,7 @@
             <div class="form-group has-warning">
               <label class="bold">Documento: </label>
               <input
-                type="number"
+                type="text"
                 class="form-control control-label"
                 v-model="nota.dni"
                 :readonly="estadoForm == 'ver'"
@@ -97,7 +97,7 @@ export default {
     },
     guardar() {//tiene dos comportamientos, según el estado del formulario sea "nuevo" o "editar"
     //va a guardar una nota editada o una nueva nota
-      let promise; //se crea una variable promise, para guardar la referencia a la promesa y simplificar código
+      let promise; //se crea una variable promise, para guardar la referencia a la promesa y para simplificar código
 
       if (this.estadoForm == "editar") {//si el estdo del formulario es "editar": se suscribe a la promesa 
         promise = axios.put(`http://192.168.1.10:5000/api/posts?codigo=${this.nota.codigo}`, this.nota);//
@@ -118,7 +118,7 @@ export default {
       return (
         this.nota.titulo.length > 3 && // valida que la longitud de los caracteres del titulo tenga más de 3 caracteres
         this.nota.autor.length > 3 && // valida que la longitud de los caracteres del autor tenga más de 3 caracteres
-        this.nota.dni.length == 8 && // valida que la longitud de los caracteres del dni tenga 8 caracteres
+        this.nota.dni.length <=6 || this.nota.dni.length <=8 && // valida que la longitud de los caracteres del dni tenga 8 caracteres
         this.nota.descripcion.length > 3 // valida que la longitud de los caracteres de la descripción tenga más de 3 caracteres
       );
     },
@@ -129,7 +129,7 @@ export default {
   mounted() {// el método mounted propio de vue  se llama despúes que se haya montado el DOM para poder acceder a los componentes reactivos,las pantallas y los elementos del DOM, y manipularlos.
     this.estadoForm = this.$route.params.state; // se guarda en el estado del formulario "estadoForm" los parametros que recibe de state
     if (this.estadoForm == "ver" || this.estadoForm == "editar") {//si el estado del formulario es "ver" o "editar"
-      this.cargaInicial();// se procede a realizar la carga inicial, cargar la nota al inicio con los parametros que recibió
+      this.cargaInicial();// se procede a realizar la carga inicial, cargar la nota al inicio con los parametros q ue recibió
     }
   },
 };

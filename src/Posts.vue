@@ -72,7 +72,7 @@ export default {
     };
   },
   methods: {
-    getMensaje() {
+    getMensaje() {// trae los posts que esten guardados en el backend
       // this.listaPosts = [
       //   {
       //     autor: "Adam",
@@ -103,33 +103,33 @@ export default {
       //   },
       // ];
 
-      const path = "http://192.168.1.10:5000/api/posts";
-      axios
+      const path = "http://192.168.1.10:5000/api/posts";//se crea una constante para guardar la ruta
+      axios //a través del cliente se solicita al backend que traiga(esa dirección)
         .get(path)
-        .then((resp) => {
-          this.listaPosts = resp.data;
+        .then((resp) => {//si la respuesta fue bien
+          this.listaPosts = resp.data;//guardamos en el array lista de posts la parte de la data de la respuesta
         })
-        .catch((error) => {
-          console.error(error);
+        .catch((error) => { // si la repuesta fue mal
+          console.error(error);//escribe por consola el error.
         });
     },
-    deleteNota(id) {
-      if (confirm("Se eliminaara el post!")) {
-        const path = `http://192.168.1.10:5000/api/posts?codigo=${id}`;
-        axios
-          .delete(path)
-          .then((resp) => {
-            console.log(resp.data);
-            this.getMensaje();
+    deleteNota(id) {// esté método elimina la nota 
+      if (confirm("Se eliminara el post!")) {// si confirmas se elimina la nota
+        const path = `http://192.168.1.10:5000/api/posts?codigo=${id}`;//se crea una costante para guardar la ruta
+        axios//a través del cliente se solicita al backend que elimine(esa dirección)
+          .delete(path)// elimina en esa ruta
+          .then((resp) => {// si la respuesta fue bien
+            console.log(resp.data);//escribe por consola la parte de la data de la respuesta
+            this.getMensaje();// con esté método se vuelven a cargar las notas que tiene o refrescar los posts que recibe
           })
-          .catch((error) => {
-            console.error(error);
+          .catch((error) => {// si la repuesta fue mal
+            console.error(error);//escribe por consola el error.
           });
       }
     },
   },
-  mounted() {
-    this.getMensaje();
+  mounted() {// el método mounted propio de vue  se llama despúes que se haya montado el DOM para poder acceder a los componentes reactivos,las pantallas y los elementos del DOM, y manipularlos.
+    this.getMensaje();// carga todos los posts que estén guardados en el backend
   },
 };
 </script>

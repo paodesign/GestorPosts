@@ -7,7 +7,7 @@ import Detalle from './Detalle.vue'
 
 Vue.use(VueRouter)
 
-const routes=[
+const routes=[ // se crea un aarray de rutas
     {
         path:'/', 
         redirect:'post'

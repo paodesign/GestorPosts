@@ -25,8 +25,8 @@ def mensaje():
 api = Api(app)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-class Post():
-    def __init__(self, codigo, titulo, fecha, descripcion, autor, dni):
+class Post():#se crea la clase post
+    def __init__(self, codigo, titulo, fecha, descripcion, autor, dni): #definimos sus atributos
         self.codigo = codigo
         self.titulo = titulo
         self.fecha = fecha.__str__()
@@ -35,54 +35,54 @@ class Post():
         self.dni = dni
 
 
-class Post_endpoint(Resource):
-    def get(self):
-        conn = db_connect.connect()
-        query = conn.execute("select * from posts join autores on posts.autor_dni = autores.dni")
-        lista_posts = []
+class Post_endpoint(Resource): #se crea una clase donde se definiran los endpoint
+    def get(self):# endpoint GET obtiene los post y los envia como objetos en un array "lista_post"
+        conn = db_connect.connect() # se guarda la conexión a base de datos
+        query = conn.execute("select * from posts join autores on posts.autor_dni = autores.dni")# se ejecuta la conexión a base de datos y se consulta(obtenga de las tablas posts y la tabla autores,el dni que sea igual en ambas tablas)
+        lista_posts = [] #se decalra un array vasió 
 
         for fila in query:
             post = Post(fila['id'],fila['titulo'], fila['fecha'], fila['descripcion'], fila['nombre'], fila['autor_dni'])
-            lista_posts.append(post.__dict__)
+            lista_posts.append(post.__dict__) #se agrega post al array
 
-        return jsonify(lista_posts)
+        return jsonify(lista_posts)#retorna la respueta en forma de objeto
 
-    def post(self):
-        conn = db_connect.connect()
-        titulo = request.json['titulo']
+    def post(self): #endpoint POST crea el post
+        conn = db_connect.connect()# se guarda en una variable la conexión a basa de datos
+        titulo = request.json['titulo']# se  realiza la petición http, se busca la clave para obtener su valor y se lo guarda en una variable
         fecha = request.json['fecha']
         descripcion = request.json['descripcion']
         autor = request.json['autor']
         autor_dni = request.json['dni']
         fecha_nac = request.json['fecha_nac']
 
-        query = conn.execute("select count(*) from autores where dni = {}".format(autor_dni))
-        resultado = query.cursor.fetchone()[0]
-        if resultado ==  0:
-            conn.execute("insert into autores values('{0}','{1}','{2}')".format(autor_dni, autor, fecha_nac))
+        query = conn.execute("select count(*) from autores where dni = {}".format(autor_dni))# se ejecuta la conexión a base de datos,y se realiza la consulta(queremos saber la cant, de autores con el mismo dni)
+        resultado = query.cursor.fetchone()[0] #se guaraga el resultado obtenido en la consulta
+        if resultado ==  0:# si el resultado es igual a cero se crea un nuevo autor
+            conn.execute("insert into autores values('{0}','{1}','{2}')".format(autor_dni, autor, fecha_nac))#se ejecuta la conexión, se añade datos a la tabla creando el autor
 
-        query = conn.execute("insert into posts values('{0}','{1}','{2}','{3}')".format(titulo, fecha, descripcion, autor_dni))
-        return {'status': 'Nuevo post añadido'}
+        query = conn.execute("insert into posts values('{0}','{1}','{2}','{3}')".format(titulo, fecha, descripcion, autor_dni))#se ejecuta la conexión a base de datos,y se agrega datos a la tabla posts creando un nuevo posts
+        return {'status': 'Nuevo post añadido'}# returna el estado de nuestar petición
 
-    def delete(self):
-        conn = db_connect.connect()
-        codigo = request.args.get("codigo")
-        query = conn.execute("select count(*) from posts where id = {}".format(codigo))
-        resultado = query.cursor.fetchone()[0]
-        if resultado ==  0:
-            abort(400)
+    def delete(self):# endpoint DELETE elimina el post
+        conn = db_connect.connect()# se guarda la conexión a base de datos
+        codigo = request.args.get("codigo")# se realiza la petición http, que obtenga el código unívoco
+        query = conn.execute("select count(*) from posts where id = {}".format(codigo))# se ejecuta la conexión y se realiza la consulta(queremos saber cuantos posts tiene ese id o código unívoco)
+        resultado = query.cursor.fetchone()[0]# se guarga el resultado obtenido en la consulta
+        if resultado ==  0: #si el resultado es igual a cero
+            abort(400) #se manda error, no se puede realizar esa petición, no existe
 
-        query = conn.execute("delete from posts where id ={}".format(codigo))
+        query = conn.execute("delete from posts where id ={}".format(codigo))# se ejecuta la conexión a la base de datos y se elimina ese post.
        
-        return {'status': 'Se a eliminado el Post'}
+        return {'status': 'Se a eliminado el Post'}# retorna el estado 
 
-    def put(self):
-        conn = db_connect.connect()
-        codigo = request.args.get("codigo")
-        titulo = request.json['titulo']
+    def put(self): #endpoint PUT editar un post ya existente
+        conn = db_connect.connect()# se guarda la conexión a la basa de datos
+        codigo = request.args.get("codigo")# se realiza la petición http, que obtenga el código unívoco
+        titulo = request.json['titulo']# se  realiza la petición http, se busca la clave para obtener su valor y se lo guarda en una variable
         descripcion = request.json['descripcion']
 
-        query = conn.execute("update posts set titulo = '{0}', descripcion = '{1}' where id = '{2}'".format(titulo, descripcion, codigo))
+        query = conn.execute("update posts set titulo = '{0}', descripcion = '{1}' where id = '{2}'".format(titulo, descripcion, codigo))#se ejecuta la conexión a base de datos y se módifican los datos del post
         return {'status': 'Se a modificado el Post'}
 
 
@@ -90,14 +90,14 @@ class Post_endpoint(Resource):
 
 
 class Employees(Resource):
-    def get(self):
+    def get(self):# se crea una función recibir
         conn = db_connect.connect() # Conexión a la Base de Datos
         query = conn.execute("select * from employees")  # Esta línea ejecuta un query y retorna un json como resultado
         return {'employees': [i[0] for i in query.cursor.fetchall()]}  # Se obtiene la primera columna que es EmployeeId
 
-    def post(self):
-        conn = db_connect.connect()
-        last_name = request.json['LastName']
+    def post(self):# se crea una función modificar
+        conn = db_connect.connect()# Conexión a la Base de Datos
+        last_name = request.json['LastName'] #guargamos en esta variable 
         first_name = request.json['FirstName']
         title = request.json['Title']
         reports_to = request.json['ReportsTo']

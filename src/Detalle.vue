@@ -1,39 +1,43 @@
 <template>
   <div class="container">
-    <form>
+    <form name="formNota">
       <div class="form card">
         <div class="form-group card-header">
           <label class="bold">Titulo: </label>
           <input
+            id="titulo"
             class="form-control card-title"
             type="text"
             v-model="nota.titulo"
             :readonly="estadoForm == 'ver'"
+            v-on:input="marcarCambio"
           />
         </div>
-        <div class="form-group form-control">
-          <fieldset>
+        <!-- <div class="form-group"> -->
+          <fieldset class="form-group">
             <legend class="scheduler-border">Autor:</legend>
-            <div class=" ">
+            <div class="form-group">
               <label class="bold">Nombre: </label>
               <input
                 class="form-control"
                 v-model="nota.autor"
                 :readonly="estadoForm == 'ver'"
+                v-on:input="marcarCambio"
               />
             </div>
 
-            <div class="form-group has-warning">
+            <div class="form-group">
               <label class="bold">Documento: </label>
               <input
                 type="text"
-                class="form-control control-label"
+                class="form-control"
                 v-model="nota.dni"
                 :readonly="estadoForm == 'ver'"
+                v-on:input="marcarCambio"
               />
             </div>
           </fieldset>
-        </div>
+        <!-- </div> -->
 
         <div class="form-group card-text">
           <label class="bold">Texto: </label>
@@ -41,6 +45,7 @@
             class="form-control"
             v-model="nota.descripcion"
             :readonly="estadoForm == 'ver'"
+            v-on:input="marcarCambio"
             rows="5"
           ></textarea>
           <br />
@@ -52,7 +57,7 @@
           class="btn btn-primary"
           style="width: 18rem"
           @click="guardar"
-          :disabled="!esValido()"
+          :disabled="!esValido() || !huboCambiosAlEditar()"
           v-show="estadoForm != 'ver'"
         >
           Guardar
@@ -79,6 +84,7 @@ export default {
   name: "detalle",
   data() {
     return {
+      haCambiado: false,
       estadoForm: "",
       nota: {
         codigo: "",
@@ -113,16 +119,25 @@ export default {
           this.volver();// con el método volver redireciona a la página anterior
         })  
         .catch(console.error);// si la repuesta fue mal, escribe por consola el error.
+       
     },
     esValido() {// esté método realiza las validaciones del formulario
       return (
         this.nota.titulo.length > 3 && // valida que la longitud de los caracteres del titulo tenga más de 3 caracteres
         this.nota.autor.length > 3 && // valida que la longitud de los caracteres del autor tenga más de 3 caracteres
-        this.nota.dni.length <=6 || this.nota.dni.length <=8 && // valida que la longitud de los caracteres del dni tenga 8 caracteres
+        this.nota.dni.toString().length >=8 && // valida que la longitud de los caracteres del dni tenga 8 caracteres
         this.nota.descripcion.length > 3 // valida que la longitud de los caracteres de la descripción tenga más de 3 caracteres
       );
     },
+    marcarCambio(e){//esté método guarada si ha cambiado de estado algun input
+      console.log("anda", e)
+      this.haCambiado = true;
+    },
+    huboCambiosAlEditar(){
+      return (this.estadoForm == "editar" && this.haCambiado == true); 
+    },
     cargaInicial() { //esté método carga la nota al inicio con los parametros que recibe
+      
       this.nota = this.$route.params.nota;
     },
   },
@@ -130,6 +145,7 @@ export default {
     this.estadoForm = this.$route.params.state; // se guarda en el estado del formulario "estadoForm" los parametros que recibe de state
     if (this.estadoForm == "ver" || this.estadoForm == "editar") {//si el estado del formulario es "ver" o "editar"
       this.cargaInicial();// se procede a realizar la carga inicial, cargar la nota al inicio con los parametros q ue recibió
+     
     }
   },
 };

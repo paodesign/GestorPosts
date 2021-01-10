@@ -85,6 +85,10 @@ class Post_endpoint(Resource): #se crea una clase donde se definiran los endpoin
         query = conn.execute("update posts set titulo = '{0}', descripcion = '{1}' where id = '{2}'".format(titulo, descripcion, codigo))#se ejecuta la conexión a base de datos y se módifican los datos del post
         return {'status': 'Se a modificado el Post'}
 
+    def get(self, id):
+        conn = db_connect.connect()
+        codigo = request.args.get("codigo")
+        query = conn.execute("") 
 
 
 

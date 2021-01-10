@@ -57,7 +57,7 @@
           class="btn btn-primary"
           style="width: 18rem"
           @click="guardar"
-          :disabled="!esValido() || !huboCambiosAlEditar()"
+          :disabled="!esValido() || huboCambiosAlEditar()"
           v-show="estadoForm != 'ver'"
         >
           Guardar
@@ -130,28 +130,38 @@ export default {
       );
     },
     marcarCambio(e){//esté método guarada si ha cambiado de estado algun input
-      console.log("anda", e)
       this.haCambiado = true;
     },
     huboCambiosAlEditar(){
-      return (this.estadoForm == "editar" && this.haCambiado == true); 
+      return (this.estadoForm == "editar" && this.haCambiado == false)
     },
     cargaInicial() { //esté método carga la nota al inicio con los parametros que recibe
-      
-      this.nota = this.$route.params.nota;
+    
+      const id = this.$route.params.id;
+
+      const path = `http://192.168.1.10:5000/api/posts/${id}`;
+      axios //a través del cliente se solicita al backend que traiga(esa dirección)
+        .get(path)
+        .then((resp) => {//si la respuesta fue bien
+          console.log("nota por id", resp.data)
+          this.nota = resp.data;
+        })
+        .catch((error) => { // si la repuesta fue mal
+          console.error(error);//escribe por consola el error.
+        });
     },
   },
   mounted() {// el método mounted propio de vue  se llama despúes que se haya montado el DOM para poder acceder a los componentes reactivos,las pantallas y los elementos del DOM, y manipularlos.
     this.estadoForm = this.$route.params.state; // se guarda en el estado del formulario "estadoForm" los parametros que recibe de state
     if (this.estadoForm == "ver" || this.estadoForm == "editar") {//si el estado del formulario es "ver" o "editar"
-      this.cargaInicial();// se procede a realizar la carga inicial, cargar la nota al inicio con los parametros q ue recibió
-     
+      this.cargaInicial();// se procede a realizar la carga inicial, cargar la nota al inicio con los parametros q ue recibió     
     }
   },
 };
 </script>
 
 <style>
+
 legend.scheduler-border {
   font-size: 1em !important;
   font-weight: bold !important;
@@ -160,5 +170,14 @@ legend.scheduler-border {
 }
 label.bold {
   font-weight: bold;
+}
+.card {
+  text-align: center;
+  border: 1px solid #2c3e50;
+  border-radius: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-bottom: 50px;
+  max-width: 100%;
 }
 </style>

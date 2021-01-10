@@ -50,7 +50,7 @@
           <router-link
             :to="{
               name: 'detalle',
-              params: { id: post.codigo, state: 'editar', nota: post },
+              params: { id: post.codigo, state: 'editar' },
             }"
             class="btn btn-primary"
             >Editar</router-link

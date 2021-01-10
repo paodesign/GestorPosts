@@ -21,5 +21,10 @@ export default {
 </script>
 
 <style>
-
+#app {
+  font: Arial, Helvetica, sans-serif;
+  text-align: center;
+  color: #2c3e50;
+  margin: 20px;
+}
 </style>

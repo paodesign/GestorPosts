@@ -86,6 +86,9 @@ export default {
     return {
       haCambiado: false,
       estadoForm: "",
+      listaAutores: [],
+      selectAutor: "",
+      selectAutDni: "",
       nota: {
         codigo: "",
         titulo: "",
@@ -150,6 +153,9 @@ export default {
           console.error(error);//escribe por consola el error.
         });
     },
+    cargarAutores(){
+      
+    }
   },
   mounted() {// el método mounted propio de vue  se llama despúes que se haya montado el DOM para poder acceder a los componentes reactivos,las pantallas y los elementos del DOM, y manipularlos.
     this.estadoForm = this.$route.params.state; // se guarda en el estado del formulario "estadoForm" los parametros que recibe de state

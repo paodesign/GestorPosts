@@ -36,7 +36,8 @@ class Post():#se crea la clase post
 
 
 class Post_endpoint(Resource): #se crea una clase donde se definiran los endpoint
-    def get(self):# endpoint GET obtiene los post y los envia como objetos en un array "lista_post"
+    @app.route('/api/posts')
+    def getAll():# endpoint GET obtiene los post y los envia como objetos en un array "lista_post"
         conn = db_connect.connect() # se guarda la conexión a base de datos
         query = conn.execute("select * from posts join autores on posts.autor_dni = autores.dni")# se ejecuta la conexión a base de datos y se consulta(obtenga de las tablas posts y la tabla autores,el dni que sea igual en ambas tablas)
         lista_posts = [] #se decalra un array vasió 
@@ -85,6 +86,7 @@ class Post_endpoint(Resource): #se crea una clase donde se definiran los endpoin
         query = conn.execute("update posts set titulo = '{0}', descripcion = '{1}' where id = '{2}'".format(titulo, descripcion, codigo))#se ejecuta la conexión a base de datos y se módifican los datos del post
         return {'status': 'Se a modificado el Post'}
 
+<<<<<<< HEAD
     def get(self, id):
         conn = db_connect.connect()
         codigo = request.args.get("codigo")
@@ -126,23 +128,18 @@ class Employees(Resource):
 
 class Tracks(Resource):
     def get(self):
+=======
+    @app.route('/api/posts/<int:codigo>', methods=['GET'])
+    def getById(codigo):
+>>>>>>> fd5f9bb941f521a1a71a2d7824da3f4f5707e4f5
         conn = db_connect.connect()
-        query = conn.execute("select trackid, name, composer, unitprice from tracks;")
-        result = {'data': [dict(zip(tuple (query.keys()), i)) for i in query.cursor]}
-        return jsonify(result)
+        query = conn.execute("select p.id, p.titulo, p.fecha, p.descripcion, a.nombre, a.dni from posts p join autores a on p.autor_dni = a.dni where id = '{}'".format(codigo))
+        fila = query.cursor.fetchall()[0]
+        post = Post(fila[0], fila[1], fila[2], fila[3], fila[4], fila[5])
+
+        return jsonify(post.__dict__)
 
 
-class EmployeeData(Resource):
-    def get(self, employee_id):
-        conn = db_connect.connect()
-        query = conn.execute("select * from employees where EmployeeId =%d " % int(employee_id))
-        result = {'data': [dict(zip(tuple(query.keys()), i)) for i in query.cursor]}
-        return jsonify(result)
-
-
-api.add_resource(Employees, '/employees')  # Route_1
-api.add_resource(Tracks, '/tracks')  # Route_2
-api.add_resource(EmployeeData, '/employees/<employee_id>')  # Route_3
 api.add_resource(Post_endpoint, '/api/posts')
 
 if __name__ == '__main__':

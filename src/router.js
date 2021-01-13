@@ -21,7 +21,8 @@ const routes=[ // se crea un aarray de rutas
         path:'/detalle/:state/:id',
         name:'detalle',
         component: Detalle
-    }
+    } 
+    
 ]
 
 const router = new VueRouter({

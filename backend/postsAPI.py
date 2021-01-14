@@ -138,9 +138,28 @@ class Tracks(Resource):
         post = Post(fila[0], fila[1], fila[2], fila[3], fila[4], fila[5])
 
         return jsonify(post.__dict__)
+    
+class Autor():
+    def __init__(self, dni, nombre, fecha_nac):
+        self.dni = dni
+        self.nombre = nombre
+        self.fecha_nac = fecha_nac.__str__()
+
+
+class Autor_endpoint(Resource):
+    def get(dni):
+        conn = db_connect.connect()
+        query = conn.execute("select * from autores")
+        lista_autores= []
+        for fila in query:
+            autor = Autor(fila['dni'],fila['nombre'], fila['fecha_nac'])
+            lista_autores.append(autor.__dict__)
+
+        return jsonify(lista_autores)
 
 
 api.add_resource(Post_endpoint, '/api/posts')
+api.add_resource(Autor_endpoint, '/api/autores')
 
 if __name__ == '__main__':
      app.run(host='0.0.0.0', port='5000', debug=True)

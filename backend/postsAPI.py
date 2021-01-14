@@ -86,8 +86,52 @@ class Post_endpoint(Resource): #se crea una clase donde se definiran los endpoin
         query = conn.execute("update posts set titulo = '{0}', descripcion = '{1}' where id = '{2}'".format(titulo, descripcion, codigo))#se ejecuta la conexión a base de datos y se módifican los datos del post
         return {'status': 'Se a modificado el Post'}
 
+<<<<<<< HEAD
+    def get(self, id):
+        conn = db_connect.connect()
+        codigo = request.args.get("codigo")
+        query = conn.execute("") 
+
+
+
+
+class Employees(Resource):
+    def get(self):# se crea una función recibir
+        conn = db_connect.connect() # Conexión a la Base de Datos
+        query = conn.execute("select * from employees")  # Esta línea ejecuta un query y retorna un json como resultado
+        return {'employees': [i[0] for i in query.cursor.fetchall()]}  # Se obtiene la primera columna que es EmployeeId
+
+    def post(self):# se crea una función modificar
+        conn = db_connect.connect()# Conexión a la Base de Datos
+        last_name = request.json['LastName'] #guargamos en esta variable 
+        first_name = request.json['FirstName']
+        title = request.json['Title']
+        reports_to = request.json['ReportsTo']
+        birth_date = request.json['BirthDate']
+        hire_date = request.json['HireDate']
+        address = request.json['Address']
+        city = request.json['City']
+        state = request.json['State']
+        country = request.json['Country']
+        postal_code = request.json['PostalCode']
+        phone = request.json['Phone']
+        fax = request.json['Fax']
+        email = request.json['Email']
+        query = conn.execute("insert into employees values(null,'{0}','{1}','{2}','{3}', \
+                             '{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}', \
+                             '{13}')".format(last_name,first_name,title,
+                                             reports_to, birth_date, hire_date, address,
+                                             city, state, country, postal_code, phone, fax,
+                                             email))
+        return {'status': 'Nuevo empleado insertado'}
+
+
+class Tracks(Resource):
+    def get(self):
+=======
     @app.route('/api/posts/<int:codigo>', methods=['GET'])
     def getById(codigo):
+>>>>>>> fd5f9bb941f521a1a71a2d7824da3f4f5707e4f5
         conn = db_connect.connect()
         query = conn.execute("select p.id, p.titulo, p.fecha, p.descripcion, a.nombre, a.dni from posts p join autores a on p.autor_dni = a.dni where id = '{}'".format(codigo))
         fila = query.cursor.fetchall()[0]

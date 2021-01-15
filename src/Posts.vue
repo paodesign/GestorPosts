@@ -35,7 +35,7 @@
           <div class="card-text">
             <br>
             <p class="blockquote-footer">             
-              {{ post.autor }} - {{ new Date(post.fecha).toLocaleDateString() }}
+              {{ post.autor.nombre }} - {{ new Date(post.fecha).toLocaleDateString() }}
             </p>
           </div>
         </div>
@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     getMensaje() {// trae los posts que esten guardados en el backend
-      this.listaPosts = [
+      //this.listaPosts = [
         // {
         //   autor: "Adam",
         //   codigo: 2,
@@ -101,7 +101,7 @@ export default {
         //   fecha: "2020-12-18 21:44:07.390000",
         //   titulo: "sapo de otro poso",
         // },
-      ];
+     // ];
 
       const path = "http://192.168.1.10:5000/api/posts";//se crea una constante para guardar la ruta
       axios //a través del cliente se solicita al backend que traiga(esa dirección)

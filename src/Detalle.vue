@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form name="formNota">
+    <form name="formNota" @submit.prevent>
       <div class="form card">
         <div class="form-group card-header">
           <label class="bold">Titulo: </label>
@@ -14,41 +14,39 @@
           />
         </div>
 
-        <div class="form-group">
-          <label for="">Autores: </label>
-
-          <select name="" id="" v-model="selectAutor" :options="listaAutores" class="form-control">
-            <option
-              v-bind:value="autor.dni"
-              v-for="autor in listaAutores"
-              v-bind:key="autor.dni"
+        <div class="form-group row">
+          <label class="bold">Autores: </label>
+          <div class="col-9">
+            <select
+              v-model="nota.autor"
+              :options="listaAutores"
+              class="form-control"
+              @change="marcarCambio"
             >
-              {{ autor.nombre }}
-            </option>
-          </select>
-  
-
-          <!-- <input
-                class="form-control"
-                v-model="nota.autor"
-                :readonly="estadoForm == 'ver'"
-                v-on:input="marcarCambio"
-              /> -->
+              <option
+                v-bind:value="autor"
+                v-for="autor in listaAutores"
+                v-bind:key="autor.dni"
+              >
+                {{ autor.nombre }}
+              </option>
+            </select>
+          </div>
+          <div class="col-3">
+            <input
+              type="button"
+              @click="isModalVisible = true"
+              class="btn btn-primary"
+              value="Nuevo Autor"
+            />
+            <modal
+              :titulo="'Agregar un nuevo Autor'"
+              v-if="isModalVisible"
+              @close="isModalVisible = false"
+              @guardar="guardarAutor"
+            ></modal>
+          </div>
         </div>
-
-        <!-- 
-            <div class="form-group">
-              <label class="bold">Documento: </label>
-              <input
-                type="text"
-                class="form-control"
-                v-model="nota.dni"
-                :readonly="estadoForm == 'ver'"
-                v-on:input="marcarCambio"
-              />
-            </div> -->
-
-        <!-- </div> -->
 
         <div class="form-group card-text">
           <label class="bold">Texto: </label>
@@ -90,25 +88,26 @@
 
 <script>
 import axios from "axios";
+import Modal from "./Modal.vue";
 
 export default {
+  components: {
+    Modal,
+  },
   name: "detalle",
   data() {
     return {
       haCambiado: false,
       estadoForm: "",
       listaAutores: [],
-      selectAutor: "",
-      selectAutDni: "",
       nota: {
         codigo: "",
         titulo: "",
         descripcion: "",
-        autor: "",
-        dni: "",
         fecha: "",
-        fecha_nac: new Date(),
+        autor: {},
       },
+      isModalVisible: false,
     };
   },
   methods: {
@@ -125,7 +124,12 @@ export default {
         //si el estdo del formulario es "editar": se suscribe a la promesa
         promise = axios.put(
           `http://192.168.1.10:5000/api/posts?codigo=${this.nota.codigo}`,
-          this.nota
+          this.nota,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         ); //
       } //a través del cliente se solicita al backend que modifique(en esa dirección, la nota)y la guardamos en promise
       if (this.estadoForm == "nuevo") {
@@ -149,7 +153,7 @@ export default {
         this.nota.descripcion.length > 3 // valida que la longitud de los caracteres de la descripción tenga más de 3 caracteres
       );
     },
-    marcarCambio(e) {
+    marcarCambio() {
       //esté método guarada si ha cambiado de estado algun input
       this.haCambiado = true;
     },
@@ -175,7 +179,6 @@ export default {
         });
     },
     cargarAutores() {
-
       const path = `http://192.168.1.10:5000/api/autores`;
       axios //a través del cliente se solicita al backend que traiga(esa dirección)
         .get(path)
@@ -189,10 +192,15 @@ export default {
           console.error(error); //escribe por consola el error.
         });
     },
-  
+    guardarAutor(autor) {
+      this.isModalVisible = false;
+      this.listaAutores.push(autor);
+      this.nota.autor = autor;
+      this.marcarCambio()
+    },
   },
   mounted() {
-    this.cargarAutores()
+    this.cargarAutores();
     // el método mounted propio de vue  se llama despúes que se haya montado el DOM para poder acceder a los componentes reactivos,las pantallas y los elementos del DOM, y manipularlos.
     this.estadoForm = this.$route.params.state; // se guarda en el estado del formulario "estadoForm" los parametros que recibe de state
     if (this.estadoForm == "ver" || this.estadoForm == "editar") {

@@ -7,9 +7,9 @@
         aria-labelledby="modalTitle"
         aria-describedby="modalDescription"
       >
-        <header class="modal-header card text-white bg-dark" id="modalTitle">
+        <header class="modal-header text-white bg-dark" id="modalTitle">
           <slot name="header">
-         Agregar un nuevo Autor
+            {{ titulo }}
             <button
               type="button"
               class="btn-close"
@@ -18,22 +18,33 @@
             >
               x
             </button>
-
           </slot>
         </header>
         <section class="modal-body">
           <slot name="body">
             <div class="form-group">
               <label class="bold">Nombre: </label>
-              <input type="text" class="form-control" />
+              <input
+                type="text"
+                class="form-control"
+                v-model="datosAutor.nombre"
+              />
             </div>
             <div class="form-group">
               <label class="bold">Documento: </label>
-              <input type="text" class="form-control" />
+              <input
+                type="text"
+                class="form-control"
+                v-model="datosAutor.dni"
+              />
             </div>
             <div class="form-group">
               <label class="bold">Fecha de Nacimiento: </label>
-              <input type="date" class="form-control" />
+              <input
+                type="date"
+                class="form-control"
+                v-model="datosAutor.fecha_nac"
+              />
             </div>
           </slot>
         </section>
@@ -47,11 +58,7 @@
             >
               Cerrar
             </button>
-            <button
-              type="button"
-              class="btn btn-primary"
-              aria-label="Close modal"
-            >
+            <button type="button" class="btn btn-primary" @click="guardar">
               Guardar
             </button>
           </slot>
@@ -64,12 +71,23 @@
 <script>
 export default {
   name: "modal",
+  props: ["titulo"],
   data() {
-    return {};
+    return {
+      datosAutor: {
+        nombre: "",
+        dni: "",
+        fecha_nac: "",
+      },
+    };
   },
   methods: {
     close() {
+      console.log("desde hijo", this.titulo);
       this.$emit("close");
+    },
+    guardar() {
+      this.$emit("guardar", this.datosAutor);
     },
   },
 };
